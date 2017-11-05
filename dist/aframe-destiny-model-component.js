@@ -64,7 +64,7 @@
 	AFRAME.registerComponent('destiny-model', {
 	  schema: {
 	    itemHash: { type: 'number' },
-	    game: { type: 'string' },
+	    game: { type: 'string', default: 'destiny2' },
 	    apiKey: { type: 'string', default: config.apiKey },
 	    platform: { type: 'string', default: 'mobile' },
 	    d1Manifest: { type: 'string', default: config.d1Manifest },
