@@ -54,13 +54,15 @@
 	  throw new Error('Component attempted to register before AFRAME was available.');
 	}
 
+	if (!window.BUNGIEKEY) window.BUNGIEKEY = '';
+
 	/**
 	 * Destiny Model component for A-Frame.
 	 */
 	AFRAME.registerComponent('destiny-model', {
 	  schema: {
 	    itemHash: { type: 'number' },
-	    apiKey: { type: 'string' },
+	    apiKey: { type: 'string', default: window.BUNGIEKEY },
 	    game: { type: 'string', default: 'd2' },
 	    platform: { type: 'string', default: 'web' }
 	  },
@@ -93,7 +95,7 @@
 	    var game = this.data.game;
 	    var platform = this.data.platform;
 
-	    if (!itemHash || !apiKey) { return; }
+	    if (!itemHash || (!apiKey)) { return; }
 
 	    this.remove();
 
