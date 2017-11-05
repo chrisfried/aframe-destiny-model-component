@@ -5,13 +5,21 @@
 
 Load Destiny game models from the Bungie API.
 
+Currently handles a few global variables very bluntly. Feel free to drop an Issue or a Pull Request if you've a better idea for how to handle them.
+
 For [A-Frame](https://aframe.io).
 
 ### API
 
 | Property | Description | Default Value |
 | -------- | ----------- | ------------- |
-|          |             |               |
+| itemHash | itemHash of the item you would like to load | |
+| game | Accepts `destiny` or `destiny2` | `destiny2` |
+| platform | Accepts `web` or `mobile`. Web seems to only work for Destiny 1 assets. Mobile requires you host manifest proxies. See the [TGXLoader documentation](https://github.com/DestinyDevs/BungieNetPlatform/tree/master/three-tgx-loader#loading-mobile-assets) for more info. | `mobile` |
+| apiKey | The [Bungie API Key](https://www.bungie.net/en/Application) for your app | `window.DESTINYMODELCONFIG.apiKey` |
+| d1Manifest | Destiny Manifest proxy URL | `window.DESTINYMODELCONFIG.d1Manifest` |
+| d2Manifest | Destiny 2 Manifest proxy URL | `window.DESTINYMODELCONFIG.d2Manifest` |
+
 
 ### Installation
 
@@ -23,12 +31,19 @@ Install and use by directly including the [browser files](dist):
 <head>
   <title>My A-Frame Scene</title>
   <script src="https://aframe.io/releases/0.6.0/aframe.min.js"></script>
+  <script>
+    window.DESTINYMODELCONFIG = {
+      apiKey: 'BUNGIE-API-KEY',
+      d1Manifest: 'DESTINY-MANIFEST-URL',
+      d2Manifest: 'DESTINY-2-MANIFEST-URL'
+    }
+  </script>
   <script src="https://unpkg.com/aframe-destiny-model-component/dist/aframe-destiny-model-component.min.js"></script>
 </head>
 
 <body>
   <a-scene>
-    <a-entity destiny-model="foo: bar"></a-entity>
+    <a-entity destiny-model="itemHash: 2447423793; game: destiny; platform: mobile;"></a-entity>
   </a-scene>
 </body>
 ```
