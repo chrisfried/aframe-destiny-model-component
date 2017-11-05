@@ -1,6 +1,6 @@
 {
   "name": "aframe-destiny-model-component",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Load Destiny game models from the Bungie API.",
   "main": "index.js",
   "unpkg": "dist/aframe-destiny-model-component.min.js",
