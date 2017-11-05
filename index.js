@@ -8,7 +8,9 @@ if (typeof AFRAME === 'undefined') {
   throw new Error('Component attempted to register before AFRAME was available.');
 }
 
-if (!window.BUNGIEKEY) window.BUNGIEKEY = '';
+var config = {};
+if (window.DESTINYMODELCONFIG) config = window.DESTINYMODELCONFIG;
+if (!config.apiKey) config.apiKey = '';
 
 /**
  * Destiny Model component for A-Frame.
@@ -16,9 +18,11 @@ if (!window.BUNGIEKEY) window.BUNGIEKEY = '';
 AFRAME.registerComponent('destiny-model', {
   schema: {
     itemHash: { type: 'number' },
-    apiKey: { type: 'string', default: window.BUNGIEKEY },
-    game: { type: 'string', default: 'd2' },
-    platform: { type: 'string', default: 'web' }
+    game: { type: 'string' },
+    apiKey: { type: 'string', default: config.apiKey },
+    platform: { type: 'string', default: 'mobile' },
+    d1Manifest: { type: 'string', default: config.d1Manifest },
+    d2Manifest: { type: 'string', default: config.d2Manifest }
   },
 
   /**
@@ -46,30 +50,30 @@ AFRAME.registerComponent('destiny-model', {
     var el = this.el;
     var itemHash = this.data.itemHash;
     var apiKey = this.data.apiKey;
+    var d1Manifest = this.data.d1Manifest;
+    var d2Manifest = this.data.d2Manifest;
     var game = this.data.game;
     var platform = this.data.platform;
 
-    if (!itemHash || (!apiKey)) { return; }
+    if (!itemHash || !apiKey || !game
+        || (game === 'destiny2' && platform === 'web')
+        || (game === 'destiny2' && !d2Manifest)
+        || (platform === 'mobile' && !d1Manifest)) { return; }
 
     this.remove();
 
     this.loaderPromise.then(function () {
       THREE.TGXLoader.APIKey = apiKey;
+      THREE.TGXLoader.ManifestPath = d1Manifest;        
+      THREE.TGXLoader.ManifestPath2 = d2Manifest;
       THREE.TGXLoader.Platform = platform;
-      if (game === 'd2') {
-        THREE.TGXLoader.APIBasepath = 'https://www.bungie.net/Platform/Destiny2';
-      } else {
-        THREE.TGXLoader.APIBasepath = 'https://www.bungie.net/d1/Platform/Destiny';
-      }
-      this.loader.load(itemHash, function tgxLoaded (geometry, materials) {
+      this.loader.load({itemHashes: [itemHash], game: game}, function tgxLoaded (geometry, materials) {
         var mesh = new THREE.Mesh(geometry, new THREE.MultiMaterial(materials));
         mesh.rotation.x = -90 * Math.PI / 180;
-        // mesh.scale.set(500, 500, 500);
-
+  
         self.model = mesh;
-        // self.model.animations = gltfModel.animations;
         el.setObject3D('mesh', self.model);
-        el.emit('model-loaded', {format: 'gltf', model: self.model});
+        el.emit('model-loaded', {format: 'destiny', model: self.model});
       });
     }.bind(this));
   },

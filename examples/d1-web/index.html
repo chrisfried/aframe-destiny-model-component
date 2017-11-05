@@ -6,15 +6,19 @@
     <meta name="description" content="Basic example for Destiny Model component."></meta>
     <script src="https://aframe.io/releases/0.6.0/aframe.min.js"></script>
     <script>
+      window.DESTINYMODELCONFIG = {
+        d1Manifest: 'https://lowlidev.com.au/destiny/api/gearasset/$itemHash',
+        d2Manifest: 'https://lowlidev.com.au/destiny/api/gearasset/$itemHash?destiny2'
+      }
       switch(window.location.hostname) {
         case 'dev.guardian.theater':
-          window.BUNGIEKEY = '4da0bc9d76774c5696ea2703b129a2cd';
+          window.DESTINYMODELCONFIG.apiKey = '4da0bc9d76774c5696ea2703b129a2cd';
           break;
         case 'chrisfried.github.io':
-          window.BUNGIEKEY = '83c21174d7ed4292884fed250a383fee';
+          window.DESTINYMODELCONFIG.apiKey = '83c21174d7ed4292884fed250a383fee';
           break;
         default:
-          window.BUNGIEKEY = '';
+          window.DESTINYMODELCONFIG.apiKey = '';
       }
     </script>
     <script src="../../dist/aframe-destiny-model-component.min.js"></script>
@@ -22,8 +26,7 @@
   </head>
   <body>
     <a-scene environment="preset: forest">
-      <a-entity destiny-model="itemHash: 2447423793; game: d1" position=".2 1.5 -.5"></a-entity>
-      <a-entity destiny-model="itemHash: 2447423793; game: d1" position="-.2 1.5 -.5"></a-entity>
+      <a-entity destiny-model="itemHash: 2447423793; game: destiny; platform: web;" position="-.2 1.5 -.25"></a-entity>
     </a-scene>
 
     <!-- GitHub Corner. -->
