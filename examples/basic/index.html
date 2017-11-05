@@ -5,12 +5,24 @@
     <title>A-Frame Destiny Model Component - Basic</title>
     <meta name="description" content="Basic example for Destiny Model component."></meta>
     <script src="https://aframe.io/releases/0.6.0/aframe.min.js"></script>
+    <script>
+      switch(window.location.hostname) {
+        case 'dev.guardian.theater':
+          window.BUNGIEKEY = '4da0bc9d76774c5696ea2703b129a2cd';
+          break;
+        case 'chrisfried.github.io':
+          window.BUNGIEKEY = '83c21174d7ed4292884fed250a383fee';
+          break;
+        default:
+          window.BUNGIEKEY = '';
+      }
+    </script>
     <script src="../../dist/aframe-destiny-model-component.min.js"></script>
     <script src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>
   </head>
   <body>
     <a-scene environment="preset: forest">
-      <a-entity destiny-model="itemHash: 2447423793; apiKey: 4da0bc9d76774c5696ea2703b129a2cd; game: d1" position="0 1.5 -1"></a-entity>
+      <a-entity destiny-model="itemHash: 2447423793; game: d1" position="0 1.5 -1"></a-entity>
     </a-scene>
 
     <!-- GitHub Corner. -->
