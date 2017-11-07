@@ -64,6 +64,7 @@
 	AFRAME.registerComponent('destiny-model', {
 	  schema: {
 	    itemHash: { type: 'number' },
+	    shaderHash: { type: 'number', default: 0 },
 	    game: { type: 'string', default: 'destiny2' },
 	    apiKey: { type: 'string', default: config.apiKey },
 	    platform: { type: 'string', default: 'mobile' },
@@ -95,6 +96,7 @@
 	    var self = this;
 	    var el = this.el;
 	    var itemHash = this.data.itemHash;
+	    var shaderHash = this.data.shaderHash;
 	    var apiKey = this.data.apiKey;
 	    var d1Manifest = this.data.d1Manifest;
 	    var d2Manifest = this.data.d2Manifest;
@@ -113,7 +115,7 @@
 	      THREE.TGXLoader.ManifestPath = d1Manifest;        
 	      THREE.TGXLoader.ManifestPath2 = d2Manifest;
 	      THREE.TGXLoader.Platform = platform;
-	      this.loader.load({itemHashes: [itemHash], game: game}, function tgxLoaded (geometry, materials) {
+	      this.loader.load({itemHashes: [itemHash], shaderHashes: [shaderHash], game: game}, function tgxLoaded (geometry, materials) {
 	        var mesh = new THREE.Mesh(geometry, new THREE.MultiMaterial(materials));
 	        mesh.rotation.x = -90 * Math.PI / 180;
 	  

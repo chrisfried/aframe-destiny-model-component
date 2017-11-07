@@ -13,7 +13,8 @@ For [A-Frame](https://aframe.io).
 
 | Property | Description | Default Value |
 | -------- | ----------- | ------------- |
-| itemHash | itemHash of the item you would like to load | |
+| itemHash | itemHash of the item you would like to load. | |
+| shaderHash | itemHash of the shader you would like to apply. `0` applies default shader. | `0` |
 | game | Accepts `destiny` or `destiny2` | `destiny2` |
 | platform | Accepts `web` or `mobile`. Web seems to only work for Destiny 1 assets. Mobile requires you host manifest proxies. See the [TGXLoader documentation](https://github.com/DestinyDevs/BungieNetPlatform/tree/master/three-tgx-loader#loading-mobile-assets) for more info. | `mobile` |
 | apiKey | The [Bungie API Key](https://www.bungie.net/en/Application) for your app | `window.DESTINYMODELCONFIG.apiKey` |
@@ -43,7 +44,7 @@ Install and use by directly including the [browser files](dist):
 
 <body>
   <a-scene>
-    <a-entity destiny-model="itemHash: 2447423793; game: destiny; platform: mobile;"></a-entity>
+    <a-entity destiny-model="itemHash: 3854359821; game: destiny2; shader: 1422712818; platform: mobile;"></a-entity>
   </a-scene>
 </body>
 ```
