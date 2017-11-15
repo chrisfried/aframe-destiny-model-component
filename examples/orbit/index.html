@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Destiny VR Orbit</title>
+  <meta name="description" content="Destiny VR Orbit">
+  <script src="https://aframe.io/releases/0.6.0/aframe.min.js"></script>
+  <script>
+    window.DESTINYMODELCONFIG = {
+      d1Manifest: 'https://lowlidev.com.au/destiny/api/gearasset/$itemHash',
+      d2Manifest: 'https://lowlidev.com.au/destiny/api/gearasset/$itemHash?destiny2'
+    }
+    switch (window.location.hostname) {
+      case 'dev.guardian.theater':
+        window.DESTINYMODELCONFIG.apiKey = '4da0bc9d76774c5696ea2703b129a2cd';
+        break;
+      case 'chrisfried.github.io':
+        window.DESTINYMODELCONFIG.apiKey = '83c21174d7ed4292884fed250a383fee';
+        break;
+      default:
+        window.DESTINYMODELCONFIG.apiKey = '';
+    }
+
+    AFRAME.registerComponent('center-zero', {
+      schema: {
+        parent: {
+          type: 'selector'
+        },
+        target: {
+          type: 'selector'
+        }
+      },
+      init: function () {
+        this.box;
+        this.target = new THREE.Vector3();;
+      },
+      tick: function () {
+        if (!this.box && this.el.getObject3D('mesh')) {
+          this.box = new THREE.Box3().setFromObject(this.el.getObject3D('mesh'));
+          var scale = 1;
+          var longestSide = Math.max(this.box.max.x - this.box.min.x, this.box.max.y - this.box.min.y, this.box.max.z - this.box.min.z)
+          scale = scale / longestSide;
+          this.el.setAttribute('scale', {
+            x: scale,
+            y: scale,
+            z: scale
+          });
+          var offset = {
+            x: this.data.parent.object3D.position.x - this.box.min.x - (this.box.max.x - this.box.min.x) / 2,
+            y: this.data.parent.object3D.position.y - this.box.min.y - (this.box.max.y - this.box.min.y) / 2,
+            z: this.data.parent.object3D.position.z - this.box.min.z - (this.box.max.z - this.box.min.z) / 2
+          }
+          this.el.setAttribute('position', {
+            x: offset.x * scale,
+            y: offset.y * scale,
+            z: offset.z * scale
+          });
+        }
+        if (this.box) {
+          var parent = this.data.parent;
+          var target = this.target;
+          var targetObject = this.data.target.object3D;
+          target.setFromMatrixPosition(targetObject.matrixWorld);
+          parent.setAttribute('position', {
+            x: this.target.x,
+            y: this.target.y,
+            z: this.target.z
+          });;
+        }
+      }
+    });
+  </script>
+  <script src="../../dist/aframe-destiny-model-component.min.js"></script>      
+</head>
+
+<body>
+  <a-scene inspector>
+
+    <a-entity class="wrap" position="0 0 -.5">
+      <a-entity class="destiny-model" center-zero="parent: .wrap; target: .half-meter"></a-entity>
+    </a-entity>
+
+    <a-sky height="2048" radius="30" color="#333333" width="2048"></a-sky>
+
+    <a-entity camera look-controls>
+      <a-entity class="half-meter" position="0 0 -.7"></a-entity>
+      <a-entity light="intensity: 1; type: point; target: .half-meter; cast-shadow: true" position="-1 1 .5"></a-entity>
+      <a-entity light="intensity: 1; type: point; cast-shadow: true" position="1 1 -1"></a-entity>
+      <a-entity light="intensity: .5; type: point; cast-shadow: true" position="1 0 .5"></a-entity>
+    </a-entity>
+  </a-scene>
+  
+  <script>
+    var url_string = window.location.href
+    var url = new URL(url_string);
+    var game = url.searchParams.get('game') || 'destiny';;
+    var itemHash = url.searchParams.get('itemHash') || 1170904292;
+    var shaderHash = url.searchParams.get('shaderHash') || 0;
+    var el = document.querySelector('.destiny-model');
+    console.log(shaderHash, game)
+    if (shaderHash === '-1' && game === 'destiny2') {
+      var d2shaders = [
+        3205869472,
+        3205869473,
+        3205869474,
+        3205869475,
+        3205869476,
+        3205869477,
+        3205869478,
+        3205869479,
+        3205869484,
+        3205869485,
+        16277432,
+        16277433,
+        864505614,
+        864505615,
+        1284563760,
+        1284563761,
+        1284563762,
+        1284563763,
+        1284563764,
+        1284563765,
+        1284563766,
+        1284563767,
+        1284563774,
+        1284563775,
+        1422712818,
+        1422712819,
+
+        2307426896,
+        2307426898,
+        2737886288,
+        2737886290,
+        3875413893,
+        4006192308,
+        4006192310,
+        4006192311,
+        223308216,
+        346878928,
+        346878930,
+        700322568,
+        700322570,
+        1045633725,
+        1045633727,
+        1206746476,
+        1206746478,
+        1841451177,
+        1841451179,
+
+        2657932156,
+        2657932159,
+        2926662832,
+        2926662835,
+        2926662838,
+        2926662841,
+        3403116793,
+        3403116794,
+        1489178153,
+        1489178154,
+        3450065540,
+        3450065543,
+        3921006352,
+        3921006355,
+        1051938196,
+        1051938199
+      ]
+      shaderHash = d2shaders[Math.floor(Math.random() * d2shaders.length)];
+      console.log(shaderHash)
+    } 
+    el.setAttribute('destiny-model', {
+      game: game,
+      itemHash: itemHash,
+      shaderHash: shaderHash
+    });
+  </script>
+</body>
+
+</html>
