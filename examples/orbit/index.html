@@ -101,7 +101,7 @@
     var gun = url.searchParams.get('gun');
     var ship = url.searchParams.get('ship');
     var el = document.querySelector('.destiny-model');
-    if (+gun === -1) {
+    if (gun === '-1') {
       gun = guns[Math.floor(Math.random() * guns.length)];;      
       game = gun.game;
       itemHash = gun.itemHash;
@@ -110,7 +110,7 @@
       game = guns[+gun].game;
       itemHash = guns[+gun].itemHash;
     }
-    if (+ship === -1) {
+    if (ship === '-1') {
       ship = ships[Math.floor(Math.random() * ships.length)];;      
       game = ship.game;
       itemHash = ship.itemHash;
