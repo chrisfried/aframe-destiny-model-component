@@ -46,7 +46,7 @@
 
 	var fetchScript = __webpack_require__(1)();
 
-	var LOADER_SRC = 'https://rawgit.com/DestinyDevs/BungieNetPlatform/master/three-tgx-loader/three.tgxloader.js';
+	var LOADER_SRC = 'https://rawgit.com/lowlines/three-tgx-loader/master/three.tgxloader.js';
 
 	/* global AFRAME */
 

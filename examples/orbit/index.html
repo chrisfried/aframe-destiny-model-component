@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Destiny VR Orbit</title>
+  <meta name="description" content="Destiny VR Orbit">
+  <script src="https://aframe.io/releases/0.6.0/aframe.min.js"></script>
+  <script>
+    window.DESTINYMODELCONFIG = {
+      d1Manifest: 'https://lowlidev.com.au/destiny/api/gearasset/$itemHash',
+      d2Manifest: 'https://lowlidev.com.au/destiny/api/gearasset/$itemHash?destiny2'
+    }
+    switch (window.location.hostname) {
+      case 'dev.guardian.theater':
+        window.DESTINYMODELCONFIG.apiKey = '4da0bc9d76774c5696ea2703b129a2cd';
+        break;
+      case 'chrisfried.github.io':
+        window.DESTINYMODELCONFIG.apiKey = '83c21174d7ed4292884fed250a383fee';
+        break;
+      default:
+        window.DESTINYMODELCONFIG.apiKey = '';
+    }
+
+    AFRAME.registerComponent('center-zero', {
+      schema: {
+        parent: {
+          type: 'selector'
+        },
+        target: {
+          type: 'selector'
+        }
+      },
+      init: function () {
+        this.box;
+        this.target = new THREE.Vector3();;
+      },
+      tick: function () {
+        if (!this.box && this.el.getObject3D('mesh')) {
+          this.box = new THREE.Box3().setFromObject(this.el.getObject3D('mesh'));
+          var scale = 1;
+          var longestSide = Math.max(this.box.max.x - this.box.min.x, this.box.max.y - this.box.min.y, this.box.max.z - this.box.min.z)
+          scale = scale / longestSide;
+          this.el.setAttribute('scale', {
+            x: scale,
+            y: scale,
+            z: scale
+          });
+          var offset = {
+            x: this.data.parent.object3D.position.x - this.box.min.x - (this.box.max.x - this.box.min.x) / 2,
+            y: this.data.parent.object3D.position.y - this.box.min.y - (this.box.max.y - this.box.min.y) / 2,
+            z: this.data.parent.object3D.position.z - this.box.min.z - (this.box.max.z - this.box.min.z) / 2
+          }
+          this.el.setAttribute('position', {
+            x: offset.x * scale,
+            y: offset.y * scale,
+            z: offset.z * scale
+          });
+        }
+        if (this.box) {
+          var parent = this.data.parent;
+          var target = this.target;
+          var targetObject = this.data.target.object3D;
+          target.setFromMatrixPosition(targetObject.matrixWorld);
+          parent.setAttribute('position', {
+            x: this.target.x,
+            y: this.target.y,
+            z: this.target.z
+          });;
+        }
+      }
+    });
+  </script>
+  <script src="../../dist/aframe-destiny-model-component.min.js"></script>      
+  <script src="../hashes.js"></script>
+</head>
+
+<body>
+  <a-scene inspector>
+
+    <a-entity class="wrap" position="0 0 -.5">
+      <a-entity class="destiny-model" center-zero="parent: .wrap; target: .half-meter"></a-entity>
+    </a-entity>
+
+    <a-sky height="2048" radius="30" color="#333333" width="2048"></a-sky>
+
+    <a-entity camera look-controls>
+      <a-entity class="half-meter" position="0 0 -.7"></a-entity>
+      <a-entity light="intensity: 1; type: point; target: .half-meter; cast-shadow: true" position="-1 1 .5"></a-entity>
+      <a-entity light="intensity: 1; type: point; cast-shadow: true" position="1 1 -1"></a-entity>
+      <a-entity light="intensity: .5; type: point; cast-shadow: true" position="1 0 .5"></a-entity>
+    </a-entity>
+  </a-scene>
+  
+  <script>
+    var url_string = window.location.href
+    var url = new URL(url_string);
+    var game = url.searchParams.get('game') || 'destiny';;
+    var itemHash = url.searchParams.get('itemHash') || 1170904292;
+    var shaderHash = url.searchParams.get('shaderHash') || 0;
+    var gun = url.searchParams.get('gun');
+    var ship = url.searchParams.get('ship');
+    var el = document.querySelector('.destiny-model');
+    if (gun === '-1') {
+      gun = guns[Math.floor(Math.random() * guns.length)];;      
+      game = gun.game;
+      itemHash = gun.itemHash;
+    } else if (gun) {
+      console.log('total guns', guns.length);      
+      game = guns[+gun].game;
+      itemHash = guns[+gun].itemHash;
+    }
+    if (ship === '-1') {
+      ship = ships[Math.floor(Math.random() * ships.length)];;      
+      game = ship.game;
+      itemHash = ship.itemHash;
+    } else if (ship) {
+      console.log('total ships', ships.length);
+      game = ships[+ship].game;
+      itemHash = ships[+ship].itemHash;
+    }
+    console.log(game, itemHash);
+    if (shaderHash === '-1' && game === 'destiny2') {
+      shaderHash = d2shaders[Math.floor(Math.random() * d2shaders.length)];
+    }
+    el.setAttribute('destiny-model', {
+      game: game,
+      itemHash: itemHash,
+      shaderHash: shaderHash
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Several Destiny Ships</title>
+    <meta name="description" content="Several Destiny Ships">
+    <script src="https://aframe.io/releases/0.6.0/aframe.min.js"></script>
+    <!-- <script src="https://unpkg.com/aframe-extras@^v3.12.x/dist/aframe-extras.min.js" data-angle="aframe-extras"></script>     -->
+    <script>
+      window.DESTINYMODELCONFIG = {
+        d1Manifest: 'https://lowlidev.com.au/destiny/api/gearasset/$itemHash',
+        d2Manifest: 'https://lowlidev.com.au/destiny/api/gearasset/$itemHash?destiny2'
+      }
+      switch (window.location.hostname) {
+        case 'dev.guardian.theater':
+          window.DESTINYMODELCONFIG.apiKey = '4da0bc9d76774c5696ea2703b129a2cd';
+          break;
+        case 'chrisfried.github.io':
+          window.DESTINYMODELCONFIG.apiKey = '83c21174d7ed4292884fed250a383fee';
+          break;
+        default:
+          window.DESTINYMODELCONFIG.apiKey = '';
+      }
+    </script>
+    <script src="../../dist/aframe-destiny-model-component.min.js"></script>
+    <script src="../hashes.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component@1.0.0/dist/aframe-environment-component.min.js"></script>    
+  </head>
+  <body>
+    <a-scene environment="skyType: atmosphere; skyColor: #88c; horizonColor: #ddd; lighting: none; groundColor: #0e0e0e; groundColor2: #2d2d2d; gridColor: #334a4d; preset: starry">
+
+      <!-- Ground. -->
+      <a-plane static-body rotation="-90 0 0" position="0 -.1 0" height="64" width="64"></a-plane>
+
+      <!--Tracked controls. -->
+      <!-- <a-entity static-body="shape: sphere; sphereRadius: 0.02;" sphere-collider="objects: .destiny-model" grab hand-controls="left"></a-entity>
+      <a-entity static-body="shape: sphere; sphereRadius: 0.02;" sphere-collider="objects: .destiny-model" grab hand-controls="right"></a-entity> -->
+      
+      <!-- <a-entity light="type: ambient; color: #fff"></a-entity> -->
+      <a-entity light="type: ambient; color: #BBB"></a-entity>
+      <a-entity light="type: directional; color: #FFF; intensity: 0.6" position="-0.5 1 1"></a-entity>
+
+    </a-scene>
+    <script>
+      var sceneEl = document.querySelector('a-scene');
+      for (var i = 0; i < 24; i++) {
+        var index = Math.floor(Math.random() * ships.length);
+        var ship = ships.splice(index, 1)[0];
+        var entityEl = document.createElement('a-entity');
+        entityEl.setAttribute('destiny-model', {
+          game: ship.game,
+          itemHash: ship.itemHash
+        });
+        if (ship.game === 'destiny2') {
+          var shaderHash = d2shaders[Math.floor(Math.random() * d2shaders.length)];
+          entityEl.setAttribute('destiny-model', {
+            shaderHash: shaderHash
+          })
+        }
+        entityEl.setAttribute('class', 'destiny-model');
+        entityEl.setAttribute('position', {
+          x: (Math.random() * 4) - 2,
+          y: (Math.random() * 2) + .5,
+          z: (Math.random() * 4) - 2
+        });
+        // entityEl.setAttribute('position', {
+        //   x: 0,
+        //   y: 1.5,
+        //   z: -.25
+        // });
+        entityEl.setAttribute('rotation', {
+          x: (Math.random() * 160) - 80,
+          y: (Math.random() * 360),
+          z: (Math.random() * 160) - 80
+        });
+
+        entityEl.setAttribute('scale', {
+          x: .015,
+          y: .015,
+          z: .015
+        })
+        
+        sceneEl.appendChild(entityEl);
+      }
+    </script>
+  </body>
+</html>
