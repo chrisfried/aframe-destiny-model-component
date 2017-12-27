@@ -64,12 +64,15 @@
 	AFRAME.registerComponent('destiny-model', {
 	  schema: {
 	    itemHash: { type: 'number' },
+	    itemHashes: { type: 'array' },
 	    shaderHash: { type: 'number', default: 0 },
+	    shaderHashes: { type: 'array' },
 	    game: { type: 'string', default: 'destiny2' },
 	    apiKey: { type: 'string', default: config.apiKey },
 	    platform: { type: 'string', default: 'mobile' },
 	    d1Manifest: { type: 'string', default: config.d1Manifest },
-	    d2Manifest: { type: 'string', default: config.d2Manifest }
+	    d2Manifest: { type: 'string', default: config.d2Manifest },
+	    isFemale: { type: 'boolean', default: false }
 	  },
 
 	  /**
@@ -96,14 +99,17 @@
 	    var self = this;
 	    var el = this.el;
 	    var itemHash = this.data.itemHash;
+	    var itemHashes = this.data.itemHashes || [itemHash];
 	    var shaderHash = this.data.shaderHash;
+	    var shaderHashes = this.data.shaderHashes || [shaderHash];
+	    var isFemale = this.data.isFemale;
 	    var apiKey = this.data.apiKey;
 	    var d1Manifest = this.data.d1Manifest;
 	    var d2Manifest = this.data.d2Manifest;
 	    var game = this.data.game;
 	    var platform = this.data.platform;
 
-	    if (!itemHash || !apiKey || !game
+	    if (!itemHashes || !apiKey || !game
 	        || (game === 'destiny2' && platform === 'web')
 	        || (game === 'destiny2' && !d2Manifest)
 	        || (platform === 'mobile' && !d1Manifest)) { return; }
@@ -115,7 +121,7 @@
 	      THREE.TGXLoader.ManifestPath = d1Manifest;        
 	      THREE.TGXLoader.ManifestPath2 = d2Manifest;
 	      THREE.TGXLoader.Platform = platform;
-	      this.loader.load({itemHashes: [itemHash], shaderHashes: [shaderHash], game: game}, function tgxLoaded (geometry, materials) {
+	      this.loader.load({itemHashes: itemHashes, shaderHashes: shaderHashes, game: game, isFemale: isFemale}, function tgxLoaded (geometry, materials) {
 	        var mesh = new THREE.Mesh(geometry, new THREE.MultiMaterial(materials));
 	        mesh.rotation.x = -90 * Math.PI / 180;
 	  
