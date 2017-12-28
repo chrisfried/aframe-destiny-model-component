@@ -112,7 +112,6 @@
             characters.push(character);
           }
         }
-        console.log(characters);
         let characterCount = characters.length;
         let startPosition = 0;
         switch(characterCount) {
@@ -149,8 +148,11 @@
           }
 
           let entity = document.createElement('a-entity');
-          entity.setAttribute('destiny-model', 'itemHashes:' + itemHashes.toString() + '; shaderHashes:' +
-            shaderHashes.toString() + '; isFemale:' + isFemale);
+          entity.setAttribute('destiny-model', {
+            itemHashes: itemHashes.toString(),
+            shaderHashes: shaderHashes.toString(),
+            isFemale: isFemale
+          });
           entity.setAttribute('position', startPosition + processedCount + ' 0 -.75');
           entity.setAttribute('rotation', '0 -90 0');
           document.querySelector('a-scene').appendChild(entity);
